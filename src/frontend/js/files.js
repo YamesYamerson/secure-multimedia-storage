@@ -5,9 +5,9 @@
 
 export class FileManager {
     constructor() {
-        // For development, use localhost. In production, these would be environment variables
+        // For development, use local Flask server with SQLite
         this.apiBaseUrl = window.location.hostname === 'localhost' 
-            ? 'http://localhost:3000/api' 
+            ? 'http://localhost:5000/api' 
             : 'https://api.secure-multimedia-storage.com';
         this.maxFileSize = 100 * 1024 * 1024; // 100MB
         this.allowedTypes = [
@@ -21,11 +21,10 @@ export class FileManager {
     
     async getFiles(sortBy = 'date-desc') {
         try {
-            const token = await this.getAuthToken();
-            const response = await fetch(`${this.apiBaseUrl}/files?sort=${sortBy}`, {
+            const userId = await this.getCurrentUserId();
+            const response = await fetch(`${this.apiBaseUrl}/files?user_id=${userId}`, {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 }
             });
@@ -48,39 +47,31 @@ export class FileManager {
             // Validate file
             this.validateFile(file);
             
-            // Get upload URL
-            const uploadUrl = await this.getUploadUrl(file);
+            // Get user ID for development
+            const userId = await this.getCurrentUserId();
             
-            // Upload file directly to S3
-            const uploadResponse = await fetch(uploadUrl.url, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': file.type,
-                    'x-amz-server-side-encryption': 'AES256'
-                },
-                body: file
+            // Create FormData for file upload
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('user_id', userId);
+            
+            // Upload file to local Flask server
+            const response = await fetch(`${this.apiBaseUrl}/upload`, {
+                method: 'POST',
+                body: formData
             });
             
-            if (!uploadResponse.ok) {
-                throw new Error('File upload failed');
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'File upload failed');
             }
             
-            // Save metadata
-            const metadata = {
-                file_id: uploadUrl.file_id,
-                filename: file.name,
-                size: file.size,
-                type: file.type,
-                uploaded_by: await this.getCurrentUserId(),
-                uploaded_at: new Date().toISOString()
-            };
-            
-            await this.saveFileMetadata(metadata);
+            const data = await response.json();
             
             return {
                 success: true,
-                file_id: uploadUrl.file_id,
-                filename: file.name
+                file_id: data.file_id,
+                filename: data.filename
             };
             
         } catch (error) {
@@ -91,12 +82,9 @@ export class FileManager {
     
     async downloadFile(fileId) {
         try {
-            const token = await this.getAuthToken();
-            const response = await fetch(`${this.apiBaseUrl}/download/${fileId}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
+            const userId = await this.getCurrentUserId();
+            const response = await fetch(`${this.apiBaseUrl}/files/${fileId}?user_id=${userId}`, {
+                method: 'GET'
             });
             
             if (response.ok) {
@@ -114,11 +102,10 @@ export class FileManager {
     
     async deleteFile(fileId) {
         try {
-            const token = await this.getAuthToken();
-            const response = await fetch(`${this.apiBaseUrl}/files/${fileId}`, {
+            const userId = await this.getCurrentUserId();
+            const response = await fetch(`${this.apiBaseUrl}/files/${fileId}?user_id=${userId}`, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 }
             });
@@ -288,8 +275,10 @@ export class FileManager {
     }
     
     async getCurrentUserId() {
+        // DEVELOPMENT MODE: Use placeholder user ID
+        // This will be replaced with proper user ID from OAuth later
         const user = JSON.parse(localStorage.getItem('user') || '{}');
-        return user.username || 'unknown';
+        return user.id || 'dev-user-001';
     }
     
     formatFileSize(bytes) {

@@ -271,4 +271,9 @@ Thumbs.db
 uploads/
 downloads/
 temp/
-tmp/ 
+tmp/
+
+# Local development files
+file_storage.db
+*.db
+src/backend/uploads/ 

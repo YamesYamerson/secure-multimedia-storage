@@ -1,223 +1,125 @@
-# Secure Family File Storage System
+# Secure File Sharing System
 
-A lightweight, ultra-secure, web-based file sharing system designed for private family use. This system allows family members to upload, download, and manage pictures, documents, and videos with comprehensive metadata tracking and search capabilities.
+A secure file sharing system designed for private family use with local development capabilities.
 
-## 🚀 Features
+## 🚀 Quick Start
 
-- **Secure Authentication**: AWS Cognito integration with JWT tokens
-- **File Management**: Upload, download, and organize files with metadata
-- **Search & Filter**: Find files by name, type, date, and tags
-- **Version Control**: Track file history and changes
-- **Responsive Design**: Mobile-friendly interface with Tailwind CSS
-- **Security First**: End-to-end encryption, signed URLs, and audit logging
+### Prerequisites
+- Node.js (v18 or higher)
+- Python 3.9 or higher
+- npm or yarn
 
-## 🏗️ Architecture
+### Single Command Startup
 
-### Frontend
-- **Framework**: Vanilla JavaScript with ES6+ modules
-- **Styling**: Tailwind CSS with custom design system
-- **Build Tool**: Vite for fast development and optimized builds
-- **Icons**: Heroicons for consistent iconography
-
-### Backend
-- **API**: AWS API Gateway with Lambda functions
-- **Language**: Python 3.9 with Boto3 for AWS services
-- **Authentication**: AWS Cognito User Pools and Identity Pools
-- **Storage**: AWS S3 with server-side encryption and versioning
-- **Database**: DynamoDB for metadata and user data
-- **Deployment**: Serverless Framework for infrastructure as code
-
-## 📋 Prerequisites
-
-- Node.js 16+ and npm
-- Python 3.9+
-- AWS CLI configured with appropriate permissions
-- Serverless Framework (`npm install -g serverless`)
-
-## 🛠️ Installation & Setup
-
-### 1. Clone the Repository
+#### macOS/Linux:
 ```bash
-git clone <repository-url>
-cd secure-multimedia-storage
+# Option 1: Using the shell script
+./start-dev.sh
+
+# Option 2: Using npm script
+npm run dev:full
 ```
 
-### 2. Install Dependencies
+#### Windows:
 ```bash
-# Frontend dependencies
-npm install
+# Option 1: Using the batch file
+start-dev.bat
 
-# Backend dependencies
+# Option 2: Using npm script
+npm run dev:windows
+```
+
+### Manual Startup (Alternative)
+If you prefer to start servers manually:
+
+```bash
+# Terminal 1: Start backend
 cd src/backend
-pip install -r requirements.txt
-cd ../..
-```
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+python local_server.py
 
-### 3. AWS Infrastructure Setup
-```bash
-# Run the AWS setup script
-npm run setup:aws
-```
-
-This will create:
-- S3 bucket with encryption and versioning
-- DynamoDB tables for files, users, and file history
-- IAM roles and policies
-- CloudWatch logging
-
-### 4. Configure Environment Variables
-Create a `.env` file in the root directory:
-```env
-# AWS Configuration
-AWS_REGION=us-east-1
-USER_POOL_ID=your-cognito-user-pool-id
-IDENTITY_POOL_ID=your-cognito-identity-pool-id
-CLIENT_ID=your-cognito-client-id
-
-# API Configuration
-API_BASE_URL=https://your-api-gateway-url.amazonaws.com/dev
-```
-
-### 5. Deploy Backend
-```bash
-cd src/backend
-serverless deploy
-```
-
-### 6. Start Development Server
-```bash
-# Frontend development
+# Terminal 2: Start frontend
 npm run dev
-
-# Backend development (if needed)
-cd src/backend
-serverless offline
 ```
+
+## 🌐 Access Points
+
+Once started, you can access:
+
+- **Frontend**: http://localhost:3000 (or next available port)
+- **Backend API**: http://localhost:5000
+- **Health Check**: http://localhost:5000/api/health
+
+## 🔧 Development Features
+
+### Placeholder Authentication
+- Accepts any non-empty username/password for development
+- Mock tokens and user data stored in localStorage
+- Ready for OAuth integration later
+
+### Local File Storage
+- SQLite database for file metadata
+- Local file system storage in `uploads/` directory
+- File upload, download, and delete functionality
+- No AWS setup required for development
 
 ## 📁 Project Structure
 
 ```
 secure-multimedia-storage/
 ├── src/
-│   ├── frontend/
-│   │   ├── index.html          # Main HTML file
-│   │   ├── styles/
-│   │   │   └── main.css        # Tailwind CSS and custom styles
-│   │   └── js/
-│   │       ├── app.js          # Main application entry point
-│   │       ├── auth.js         # Authentication manager
-│   │       ├── files.js        # File operations manager
-│   │       └── ui.js           # UI interactions and display
-│   └── backend/
-│       ├── auth.py             # Authentication Lambda handler
-│       ├── upload.py           # File upload Lambda handler
-│       ├── download.py         # File download Lambda handler
-│       ├── list.py             # File listing Lambda handler
-│       ├── metadata.py         # File metadata Lambda handler
-│       ├── requirements.txt    # Python dependencies
-│       └── serverless.yml      # Serverless Framework configuration
-├── scripts/
-│   └── setup-aws.js           # AWS infrastructure setup script
-├── prompts/                   # Project planning and documentation
-├── docs/                      # Additional documentation
-├── package.json               # Frontend dependencies and scripts
-├── vite.config.js            # Vite configuration
-├── tailwind.config.js        # Tailwind CSS configuration
-└── README.md                 # This file
+│   ├── frontend/          # Vite + Vanilla JS frontend
+│   └── backend/           # Flask + SQLite backend
+├── tests/                 # Test files
+├── prompts/               # Project planning documents
+├── start-dev.sh          # Unix startup script
+├── start-dev.bat         # Windows startup script
+└── package.json          # Project configuration
 ```
 
-## 🔐 Security Features
+## 🛠️ Available Scripts
 
-- **HTTPS Enforcement**: All endpoints require HTTPS
-- **IAM Least Privilege**: Minimal required permissions for each service
-- **Signed URLs**: Secure file upload/download with time-limited access
-- **Server-Side Encryption**: S3 objects encrypted with AES-256
-- **Input Validation**: Comprehensive validation of all user inputs
-- **Audit Logging**: CloudWatch logs for all operations
-- **JWT Tokens**: Secure authentication with automatic refresh
+- `npm run dev` - Start frontend only
+- `npm run dev:full` - Start both frontend and backend (Unix)
+- `npm run dev:windows` - Start both frontend and backend (Windows)
+- `npm run test` - Run all tests
+- `npm run build` - Build for production
 
-## 🎨 UI/UX Design
+## 🔒 Security Notes
 
-- **Design System**: Consistent color palette, typography, and spacing
-- **Responsive Layout**: Mobile-first design with Tailwind CSS
-- **Loading States**: Smooth transitions and progress indicators
-- **Error Handling**: User-friendly error messages and recovery
-- **Accessibility**: WCAG 2.1 AA compliant components
+This is a development setup with placeholder authentication. For production:
+- Replace placeholder auth with OAuth
+- Use AWS S3 for file storage
+- Implement proper JWT token validation
+- Add HTTPS and security headers
 
-## 🚀 Deployment
+## 📝 Development Workflow
 
-### Frontend (Netlify)
+1. Use the master prompt template for all development work
+2. Follow the testing framework requirements
+3. Update changelog for all changes
+4. Run tests before committing changes
+
+## 🆘 Troubleshooting
+
+### Port Already in Use
+If you get port conflicts:
+- Frontend will automatically try ports 3000, 3001, 3002, etc.
+- Backend runs on port 5000 by default
+- Check `lsof -i :5000` (Unix) or `netstat -an | findstr :5000` (Windows)
+
+### Dependencies Not Found
+The startup scripts will automatically install missing dependencies, but you can also run:
 ```bash
-npm run build
-netlify deploy --prod
+npm install
+pip install -r src/backend/requirements.txt
 ```
 
-### Backend (AWS)
+### Virtual Environment Issues
+If Python virtual environment has issues:
 ```bash
-cd src/backend
-serverless deploy --stage prod
-```
-
-## 📊 Monitoring & Logging
-
-- **CloudWatch Logs**: All Lambda function executions
-- **S3 Access Logs**: File access and modification tracking
-- **API Gateway Logs**: Request/response monitoring
-- **Custom Metrics**: File upload/download statistics
-
-## 🔧 Development
-
-### Adding New Features
-1. Follow the established file structure
-2. Implement backend Lambda functions first
-3. Add corresponding frontend functionality
-4. Update documentation and changelog
-5. Test thoroughly before deployment
-
-### Code Standards
-- **JavaScript**: ES6+ with modules, async/await
-- **Python**: PEP 8 style guide, type hints
-- **CSS**: Tailwind utility classes, custom components
-- **Security**: Input validation, error handling, logging
-
-## 📝 API Documentation
-
-### Authentication Endpoints
-- `POST /auth/login` - User login
-- `POST /auth/register` - User registration
-- `POST /auth/logout` - User logout
-- `POST /auth/verify` - Token verification
-- `POST /auth/refresh` - Token refresh
-
-### File Endpoints
-- `GET /files` - List user files
-- `POST /upload` - Get upload URL
-- `GET /download/{fileId}` - Get download URL
-- `DELETE /files/{fileId}` - Delete file
-- `GET /files/search` - Search files
-- `GET /files/{fileId}/metadata` - Get file metadata
-- `PUT /files/{fileId}/metadata` - Update file metadata
-
-## 🤝 Contributing
-
-1. Follow the established development workflow
-2. Reference the project planning documents in `/prompts/`
-3. Update the changelog for all changes
-4. Test thoroughly before submitting
-5. Follow security best practices
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🆘 Support
-
-For questions or issues:
-1. Check the project documentation in `/prompts/`
-2. Review the changelog for recent changes
-3. Check CloudWatch logs for backend issues
-4. Verify AWS service configurations
-
-## 🔄 Version History
-
-See `prompts/project_changelog.md` for detailed version history and changes. 
+rm -rf venv
+python3 -m venv venv
+source venv/bin/activate
+pip install -r src/backend/requirements.txt
+``` 

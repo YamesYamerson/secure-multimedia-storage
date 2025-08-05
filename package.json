@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
+    "dev:full": "./start-dev.sh",
+    "dev:windows": "start-dev.bat",
     "build": "vite build",
     "preview": "vite preview",
     "setup:aws": "node scripts/setup-aws.js",

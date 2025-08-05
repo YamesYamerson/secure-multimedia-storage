@@ -188,6 +188,12 @@ BEFORE proceeding with any development work, you MUST follow this systematic pro
 - AI should verify environment status
 - AI should then proceed with your task
 
+### **ALWAYS Capture New Information:**
+- If user query contains new requirements or feedback, add them to master protocol
+- Document new context, rules, or procedures in appropriate sections
+- Update protocol version when significant changes are made
+- Ensure new information is integrated into the development workflow
+
 ---
 
 ## 📊 **SUCCESS CRITERIA**
@@ -208,6 +214,7 @@ BEFORE proceeding with any development work, you MUST follow this systematic pro
 - [ ] Proper tool call order maintained
 - [ ] All changes documented
 - [ ] Version control maintained
+- [ ] New information captured and integrated into protocol
 
 ---
 
@@ -227,6 +234,7 @@ BEFORE proceeding with any development work, you MUST follow this systematic pro
 3. **Verify Environment** - Ensure both frontend and backend are running
 4. **Update Changelog** - Document all changes
 5. **Update Reference Guide** - Keep status current
+6. **Capture New Information** - Integrate user feedback and new requirements into protocol
 
 ---
 
@@ -258,5 +266,5 @@ BEFORE proceeding with any development work, you MUST follow this systematic pro
 **Remember**: This master prompt is your gateway to proper development. Use it every time, and the AI will automatically follow all the established protocols, verify the environment, and reference the correct files in the right order!
 
 **Last Updated**: [Current Date]  
-**Current Version**: 1.1  
+**Current Version**: 1.2  
 **Next Review**: Before starting any development work 

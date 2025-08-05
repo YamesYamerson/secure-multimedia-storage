@@ -14,27 +14,42 @@ export class AuthManager {
     }
     
     async login(username, password) {
+        // DEVELOPMENT MODE: Accept any input for placeholder authentication
+        // This will be replaced with proper OAuth later
         try {
-            const response = await fetch(`${this.apiBaseUrl}/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password })
-            });
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 500));
             
-            const data = await response.json();
-            
-            if (response.ok) {
+            // Accept any non-empty username and password
+            if (username && password && username.trim() && password.trim()) {
+                const mockUser = {
+                    id: 'dev-user-001',
+                    username: username,
+                    email: `${username}@example.com`,
+                    name: username,
+                    created_at: new Date().toISOString()
+                };
+                
+                const mockToken = {
+                    access_token: `dev-token-${Date.now()}`,
+                    refresh_token: `dev-refresh-${Date.now()}`,
+                    expires_in: 3600
+                };
+                
+                // Store in localStorage for development
+                localStorage.setItem('access_token', mockToken.access_token);
+                localStorage.setItem('refresh_token', mockToken.refresh_token);
+                localStorage.setItem('user', JSON.stringify(mockUser));
+                
                 return {
                     success: true,
-                    tokens: data.tokens,
-                    user: data.user
+                    tokens: mockToken,
+                    user: mockUser
                 };
             } else {
                 return {
                     success: false,
-                    error: data.error || 'Login failed'
+                    error: 'Username and password are required'
                 };
             }
             
@@ -42,33 +57,31 @@ export class AuthManager {
             console.error('Login error:', error);
             return {
                 success: false,
-                error: 'Network error. Please try again.'
+                error: 'Login failed. Please try again.'
             };
         }
     }
     
     async register(username, password, email, name) {
+        // DEVELOPMENT MODE: Accept any input for placeholder registration
+        // This will be replaced with proper OAuth later
         try {
-            const response = await fetch(`${this.apiBaseUrl}/auth/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password, email, name })
-            });
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 500));
             
-            const data = await response.json();
-            
-            if (response.ok) {
+            // Accept any non-empty input
+            if (username && password && username.trim() && password.trim()) {
+                const mockUserId = `dev-user-${Date.now()}`;
+                
                 return {
                     success: true,
-                    message: data.message,
-                    userId: data.user_id
+                    message: 'Registration successful! You can now log in.',
+                    userId: mockUserId
                 };
             } else {
                 return {
                     success: false,
-                    error: data.error || 'Registration failed'
+                    error: 'Username and password are required'
                 };
             }
             
@@ -76,7 +89,7 @@ export class AuthManager {
             console.error('Registration error:', error);
             return {
                 success: false,
-                error: 'Network error. Please try again.'
+                error: 'Registration failed. Please try again.'
             };
         }
     }
@@ -100,17 +113,14 @@ export class AuthManager {
     }
     
     async verifyToken(token) {
+        // DEVELOPMENT MODE: Accept any dev token
+        // This will be replaced with proper JWT verification later
         try {
-            const response = await fetch(`${this.apiBaseUrl}/auth/verify`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ token })
-            });
-            
-            const data = await response.json();
-            return data.valid === true;
+            // Accept any token that starts with 'dev-token-'
+            if (token && token.startsWith('dev-token-')) {
+                return true;
+            }
+            return false;
             
         } catch (error) {
             console.error('Token verification error:', error);
@@ -162,6 +172,12 @@ export class AuthManager {
     
     isTokenExpired(token) {
         if (!token) return true;
+        
+        // DEVELOPMENT MODE: Dev tokens never expire
+        // This will be replaced with proper JWT expiration check later
+        if (token.startsWith('dev-token-')) {
+            return false;
+        }
         
         try {
             const payload = JSON.parse(atob(token.split('.')[1]));

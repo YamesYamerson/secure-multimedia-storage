@@ -1,6 +1,6 @@
 # Project Changelog - Secure File Sharing System
 
-**VERSION: 1.7** - Last Updated: [Current Date]
+**VERSION: 2.0** - Last Updated: [Current Date]
 
 ## ⚠️ VERSION CONTROL PROTOCOL ⚠️
 **CRITICAL**: This file tracks ALL changes to the project. The original `secure_file_sharing_plan.txt` should NEVER be modified directly.
@@ -21,6 +21,162 @@
 ---
 
 ## Version History
+
+### Version 2.0 - Single Command Development Startup Scripts
+**Date**: [Current Date]  
+**Type**: Major  
+**Author**: AI Assistant  
+**Files Created**: `start-dev.sh`, `start-dev.bat`, `README.md`  
+**Files Updated**: `package.json`
+
+#### Changes Made:
+- **Created comprehensive startup scripts** for single-command development environment launch
+- **Added cross-platform support** with Unix shell script and Windows batch file
+- **Integrated npm scripts** for easy access to startup commands
+- **Created comprehensive README** with setup instructions and troubleshooting
+- **Added automatic dependency checking** and installation in startup scripts
+
+#### Specific Additions:
+1. **Unix Startup Script** (`start-dev.sh`):
+   - Colored output with status indicators
+   - Automatic virtual environment creation and activation
+   - Dependency checking and installation
+   - Graceful shutdown with signal handling
+   - Health checks for both servers
+   - Error handling and validation
+
+2. **Windows Startup Script** (`start-dev.bat`):
+   - Cross-platform compatibility
+   - Same functionality as Unix script
+   - Windows-specific path handling
+   - Separate window management for servers
+
+3. **NPM Scripts Integration**:
+   - `npm run dev:full` - Unix startup script
+   - `npm run dev:windows` - Windows startup script
+   - Maintains existing `npm run dev` for frontend only
+
+4. **Comprehensive README**:
+   - Quick start instructions
+   - Prerequisites and setup
+   - Troubleshooting guide
+   - Development workflow
+   - Security notes
+
+#### Impact on Project:
+- **Developer Experience**: Single command to start entire development environment
+- **Cross-Platform Support**: Works on macOS, Linux, and Windows
+- **Reduced Setup Time**: Automatic dependency management
+- **Better Documentation**: Clear instructions for new developers
+- **Error Prevention**: Validation and health checks prevent common issues
+
+#### Files Created:
+- `start-dev.sh` - Unix development startup script
+- `start-dev.bat` - Windows development startup script
+- `README.md` - Comprehensive project documentation
+
+#### Files Updated:
+- `package.json` - Added npm scripts for startup commands
+
+---
+
+### Version 1.9 - Master Protocol Enhancement for Information Capture
+**Date**: [Current Date]  
+**Type**: Minor  
+**Author**: AI Assistant  
+**Files Updated**: `master_prompt_template.md`, `project_changelog.md`
+
+#### Changes Made:
+- **Enhanced master protocol** to capture and integrate new information from user queries
+- **Added new critical rule** for capturing user feedback and requirements
+- **Updated success criteria** to include new information capture
+- **Enhanced workflow** to include information integration step
+- **Updated protocol version** from 1.1 to 1.2
+
+#### Specific Additions:
+1. **New Critical Rule**: "ALWAYS Capture New Information"
+   - Document new requirements or feedback from user queries
+   - Add new context, rules, or procedures to appropriate sections
+   - Update protocol version when significant changes are made
+   - Ensure new information is integrated into development workflow
+
+2. **Enhanced Success Criteria**:
+   - Added checkbox for "New information captured and integrated into protocol"
+   - Ensures protocol compliance includes information capture
+
+3. **Updated Workflow**:
+   - Added Step 6: "Capture New Information"
+   - Integrate user feedback and new requirements into protocol
+
+4. **Version Update**:
+   - Master prompt template updated from version 1.1 to 1.2
+   - Project changelog updated to version 1.9
+
+#### Impact on Project:
+- **Continuous Improvement**: Protocol evolves based on user feedback
+- **Better Documentation**: New requirements are captured systematically
+- **Enhanced Workflow**: Information capture becomes part of standard process
+- **Protocol Maintenance**: Version control for protocol changes
+
+#### Files Updated:
+- `prompts/master_prompt_template.md` - Enhanced with information capture rules
+- `prompts/project_changelog.md` - Documented protocol enhancement
+
+---
+
+### Version 1.8 - Placeholder Authentication and Local SQLite Storage Implementation
+**Date**: [Current Date]  
+**Type**: Major  
+**Author**: AI Assistant  
+**Files Updated**: `auth.js`, `files.js`, `requirements.txt`  
+**Files Created**: `local_server.py`
+
+#### Changes Made:
+- **Implemented placeholder authentication** that accepts any non-empty username/password
+- **Created local Flask server** with SQLite database for file storage testing
+- **Updated frontend file manager** to work with local backend instead of AWS
+- **Added Flask dependencies** to requirements.txt for local development
+- **Established development workflow** for testing file upload/download functionality
+
+#### Specific Additions:
+1. **Placeholder Authentication**: 
+   - Modified `auth.js` to accept any input for development
+   - Mock tokens and user data stored in localStorage
+   - Simulated network delays for realistic testing
+   - Clear comments indicating this is for development only
+
+2. **Local Flask Server**:
+   - Created `local_server.py` with SQLite database
+   - File upload/download/delete endpoints
+   - File metadata storage in SQLite
+   - Local file system storage in `uploads/` directory
+   - Health check endpoint for server status
+
+3. **Frontend Integration**:
+   - Updated `files.js` to use local Flask server (port 5000)
+   - Modified upload/download/delete methods for local backend
+   - Updated user ID handling for development mode
+   - Removed AWS-specific code for local testing
+
+4. **Dependencies**:
+   - Added Flask, Flask-CORS, Werkzeug to requirements.txt
+   - All dependencies installed and tested
+
+#### Impact on Project:
+- **Development Testing**: Can now test file upload/download without AWS setup
+- **Faster Development**: Local development without cloud dependencies
+- **Easy Testing**: Simple authentication for testing user flows
+- **Foundation Ready**: Ready to implement OAuth and AWS integration later
+
+#### Files Updated:
+- `src/frontend/js/auth.js` - Placeholder authentication implementation
+- `src/frontend/js/files.js` - Local backend integration
+- `src/backend/requirements.txt` - Added Flask dependencies
+
+#### Files Created:
+- `src/backend/local_server.py` - Local Flask server with SQLite storage
+
+---
 
 ### Version 1.7 - Environment Verification Added to Master Protocol
 **Date**: [Current Date]  
