@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Family File Storage</title>
+    <meta name="description" content="Secure file sharing system for private family use">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons - Using inline SVG instead of CDN to avoid loading issues -->
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="./styles/main.css">
+</head>
+<body class="bg-gray-50 font-inter">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
+        <div class="text-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+            <p class="text-gray-600">Loading Secure File Storage...</p>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app" class="min-h-screen hidden">
+        <!-- Navigation -->
+        <nav class="bg-white shadow-sm border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <h1 class="text-xl font-semibold text-gray-900">Secure Family Storage</h1>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div id="user-info" class="hidden">
+                            <span id="user-name" class="text-sm text-gray-700"></span>
+                            <button id="logout-btn" class="ml-4 text-sm text-primary-600 hover:text-primary-700">
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <!-- Authentication Section -->
+            <div id="auth-section" class="hidden">
+                <div class="max-w-md mx-auto">
+                    <div class="bg-white py-8 px-6 shadow rounded-lg sm:px-10">
+                        <div class="mb-6">
+                            <h2 id="auth-title" class="text-2xl font-bold text-gray-900 text-center">Sign In</h2>
+                            <p id="auth-subtitle" class="mt-2 text-sm text-gray-600 text-center">
+                                Access your secure family file storage
+                            </p>
+                        </div>
+                        
+                        <form id="auth-form" class="space-y-6">
+                            <div>
+                                <label for="username" class="block text-sm font-medium text-gray-700">
+                                    Username
+                                </label>
+                                <input type="text" id="username" name="username" required
+                                       class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                            </div>
+                            
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-gray-700">
+                                    Password
+                                </label>
+                                <input type="password" id="password" name="password" required
+                                       class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                            </div>
+                            
+                            <div id="auth-error" class="hidden">
+                                <p class="text-sm text-red-600"></p>
+                            </div>
+                            
+                            <button type="submit" id="auth-submit"
+                                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                Sign In
+                            </button>
+                        </form>
+                        
+                        <div class="mt-6 text-center">
+                            <button id="toggle-auth-mode" class="text-sm text-primary-600 hover:text-primary-700">
+                                Need an account? Sign up
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File Storage Section -->
+            <div id="storage-section" class="hidden">
+                <!-- Upload Section -->
+                <div class="bg-white shadow rounded-lg p-6 mb-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Upload Files</h3>
+                    
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        <div class="space-y-4">
+                            <div class="flex justify-center">
+                                <svg class="h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                            <div>
+                                <label for="file-upload" class="cursor-pointer">
+                                    <span class="mt-2 block text-sm font-medium text-gray-900">
+                                        Drop files here or click to upload
+                                    </span>
+                                    <span class="mt-1 block text-xs text-gray-500">
+                                        PNG, JPG, PDF, DOC up to 100MB
+                                    </span>
+                                </label>
+                                <input id="file-upload" name="file-upload" type="file" class="sr-only" multiple>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="upload-progress" class="hidden mt-4">
+                        <div class="bg-gray-200 rounded-full h-2">
+                            <div id="progress-bar" class="bg-primary-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <p id="progress-text" class="text-sm text-gray-600 mt-2">Uploading...</p>
+                    </div>
+                </div>
+
+                <!-- File List Section -->
+                <div class="bg-white shadow rounded-lg">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-medium text-gray-900">Your Files</h3>
+                            <div class="flex items-center space-x-4">
+                                <input type="text" id="search-input" placeholder="Search files..."
+                                       class="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                <select id="sort-select" class="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                    <option value="date-desc">Date (Newest)</option>
+                                    <option value="date-asc">Date (Oldest)</option>
+                                    <option value="name-asc">Name (A-Z)</option>
+                                    <option value="name-desc">Name (Z-A)</option>
+                                    <option value="size-desc">Size (Largest)</option>
+                                    <option value="size-asc">Size (Smallest)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="files-container" class="p-6">
+                        <div id="files-loading" class="text-center py-8">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+                            <p class="text-gray-600">Loading files...</p>
+                        </div>
+                        
+                        <div id="files-empty" class="hidden text-center py-8">
+                            <svg class="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <p class="text-gray-600">No files uploaded yet</p>
+                        </div>
+                        
+                        <div id="files-list" class="hidden space-y-4">
+                            <!-- Files will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="./js/app.js"></script>
+</body>
+</html> 

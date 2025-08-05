@@ -1,0 +1,114 @@
+service: secure-multimedia-storage
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  
+  # Environment variables
+  environment:
+    BUCKET_NAME: secure-multimedia-storage-files
+    FILES_TABLE: secure-multimedia-files
+    USERS_TABLE: secure-multimedia-users
+    FILE_HISTORY_TABLE: secure-multimedia-file-history
+    REGION: us-east-1
+  
+  # IAM role statements
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+        - s3:PutObject
+        - s3:DeleteObject
+        - s3:ListBucket
+      Resource:
+        - arn:aws:s3:::secure-multimedia-storage-files
+        - arn:aws:s3:::secure-multimedia-storage-files/*
+    
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:Query
+        - dynamodb:Scan
+      Resource:
+        - arn:aws:dynamodb:us-east-1:*:table/secure-multimedia-files
+        - arn:aws:dynamodb:us-east-1:*:table/secure-multimedia-users
+        - arn:aws:dynamodb:us-east-1:*:table/secure-multimedia-file-history
+    
+    - Effect: Allow
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: arn:aws:logs:us-east-1:*:*
+
+  # API Gateway settings
+  apiGateway:
+    shouldStartNameWithService: true
+    cors: true
+
+functions:
+  # Authentication functions
+  auth:
+    handler: auth.handler
+    events:
+      - http:
+          path: /auth/{proxy+}
+          method: ANY
+          cors: true
+  
+  # File upload function
+  upload:
+    handler: upload.handler
+    events:
+      - http:
+          path: /upload
+          method: POST
+          cors: true
+    timeout: 30
+  
+  # File download function
+  download:
+    handler: download.handler
+    events:
+      - http:
+          path: /download/{fileId}
+          method: GET
+          cors: true
+  
+  # File list function
+  list:
+    handler: list.handler
+    events:
+      - http:
+          path: /files
+          method: GET
+          cors: true
+  
+  # File metadata function
+  metadata:
+    handler: metadata.handler
+    events:
+      - http:
+          path: /files/{fileId}/metadata
+          method: ANY
+          cors: true
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+    layer:
+      name: python-deps
+      description: Python dependencies for secure file sharing
+    noDeploy:
+      - coverage
+      - pytest 
